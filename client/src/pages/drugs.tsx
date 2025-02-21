@@ -19,12 +19,12 @@ export default function Drugs() {
   const canAddDrugs = ["admin", "pharmacist"].includes(user?.role || "");
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-background">
       <NavSidebar />
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-4 sm:p-8 overflow-auto mt-16 lg:mt-0">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">Drug Inventory</h1>
+          <div className="flex justify-between items-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold">Drug Inventory</h1>
             {canAddDrugs && (
               <Button onClick={() => setIsDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -36,7 +36,7 @@ export default function Drugs() {
           <DrugList drugs={drugs || []} isLoading={isLoading} />
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DrugForm onSuccess={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
