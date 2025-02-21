@@ -10,6 +10,7 @@ import {
   Pill,
   Menu,
   BarChart,
+  Settings,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -22,6 +23,7 @@ export default function NavSidebar() {
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Drugs", href: "/drugs", icon: Package },
     { name: "Reports", href: "/reports", icon: BarChart },
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
   const NavContent = () => (
