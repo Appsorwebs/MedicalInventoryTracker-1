@@ -22,11 +22,14 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex">
-      <div className="flex-1 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Medical Drug Expiry Manager</CardTitle>
+            <div className="flex items-center gap-2 mb-2">
+              <Pill className="h-6 w-6 text-primary" />
+              <CardTitle>Medical Drug Expiry Manager</CardTitle>
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs value={isLogin ? "login" : "register"} onValueChange={(v) => setIsLogin(v === "login")}>

@@ -30,13 +30,13 @@ export default function Dashboard() {
   const expiredDrugs = drugs?.filter(drug => new Date(drug.expirationDate) <= new Date()).length || 0;
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-background">
       <NavSidebar />
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-4 sm:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Welcome, {user?.username}</h1>
-          
-          <div className="grid gap-6 md:grid-cols-3 mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Welcome, {user?.username}</h1>
+
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 sm:mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Total Drugs</CardTitle>
@@ -75,12 +75,12 @@ export default function Dashboard() {
             <CardContent>
               <div className="space-y-4">
                 {expiringDrugs?.map(drug => (
-                  <div key={drug.id} className="flex items-center justify-between p-4 border rounded">
-                    <div>
+                  <div key={drug.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded">
+                    <div className="mb-2 sm:mb-0">
                       <h3 className="font-semibold">{drug.brandName}</h3>
                       <p className="text-sm text-muted-foreground">Batch: {drug.batchNumber}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <p className="text-sm font-medium">Expires on</p>
                       <p className="text-sm text-muted-foreground">
                         {new Date(drug.expirationDate).toLocaleDateString()}

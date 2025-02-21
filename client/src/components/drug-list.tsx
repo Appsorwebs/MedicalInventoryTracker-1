@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 type DrugListProps = {
   drugs: Drug[];
@@ -32,39 +33,64 @@ export default function DrugList({ drugs, isLoading }: DrugListProps) {
     if (monthsUntilExpiry <= 0) {
       return <Badge variant="destructive">Expired</Badge>;
     } else if (monthsUntilExpiry <= 6) {
-      return <Badge variant="warning">Expiring Soon</Badge>;
+      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Expiring Soon</Badge>;
     }
     return <Badge variant="secondary">Valid</Badge>;
   };
 
   return (
-    <div className="border rounded-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Brand Name</TableHead>
-            <TableHead>Generic Name</TableHead>
-            <TableHead>Batch Number</TableHead>
-            <TableHead>Expiration Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Quantity</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {drugs.map((drug) => (
-            <TableRow key={drug.id}>
-              <TableCell className="font-medium">{drug.brandName}</TableCell>
-              <TableCell>{drug.genericName}</TableCell>
-              <TableCell>{drug.batchNumber}</TableCell>
-              <TableCell>
-                {new Date(drug.expirationDate).toLocaleDateString()}
-              </TableCell>
-              <TableCell>{getExpiryStatus(drug.expirationDate)}</TableCell>
-              <TableCell>{drug.quantity}</TableCell>
+    <>
+      {/* Mobile View */}
+      <div className="lg:hidden space-y-4">
+        {drugs.map((drug) => (
+          <Card key={drug.id} className="p-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-medium">{drug.brandName}</h3>
+                  <p className="text-sm text-muted-foreground">{drug.genericName}</p>
+                </div>
+                {getExpiryStatus(drug.expirationDate)}
+              </div>
+              <div className="text-sm">
+                <p>Batch: {drug.batchNumber}</p>
+                <p>Expires: {new Date(drug.expirationDate).toLocaleDateString()}</p>
+                <p>Quantity: {drug.quantity}</p>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop View */}
+      <div className="hidden lg:block border rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Brand Name</TableHead>
+              <TableHead>Generic Name</TableHead>
+              <TableHead>Batch Number</TableHead>
+              <TableHead>Expiration Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Quantity</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {drugs.map((drug) => (
+              <TableRow key={drug.id}>
+                <TableCell className="font-medium">{drug.brandName}</TableCell>
+                <TableCell>{drug.genericName}</TableCell>
+                <TableCell>{drug.batchNumber}</TableCell>
+                <TableCell>
+                  {new Date(drug.expirationDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{getExpiryStatus(drug.expirationDate)}</TableCell>
+                <TableCell>{drug.quantity}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
