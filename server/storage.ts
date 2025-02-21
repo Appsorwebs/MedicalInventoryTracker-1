@@ -32,15 +32,31 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    // Create a separate connection pool for the session store
-    // to avoid conflicts with the schema migrations
-    const sessionPool = new postgres.Pool({ connectionString: process.env.DATABASE_URL });
+    try {
+      // Create a separate connection pool for the session store
+      const sessionPool = new postgres.Pool({ 
+        connectionString: process.env.DATABASE_URL,
+        max: 20 // Increase pool size
+      });
 
-    this.sessionStore = new PostgresSessionStore({
-      pool: sessionPool,
-      tableName: 'session', // Explicitly name the table
-      createTableIfMissing: true,
-    });
+      this.sessionStore = new PostgresSessionStore({
+        pool: sessionPool,
+        tableName: 'session', // Explicitly name the table
+        createTableIfMissing: true,
+      });
+
+      // Test the connection
+      sessionPool.query('SELECT NOW()', (err) => {
+        if (err) {
+          console.error('Session store connection error:', err);
+        } else {
+          console.log('Session store connected successfully');
+        }
+      });
+    } catch (error) {
+      console.error('Failed to initialize session store:', error);
+      throw error;
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {
