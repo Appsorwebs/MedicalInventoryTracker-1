@@ -9,6 +9,7 @@ import {
   LogOut,
   Pill,
   Menu,
+  BarChart,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -20,6 +21,7 @@ export default function NavSidebar() {
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Drugs", href: "/drugs", icon: Package },
+    { name: "Reports", href: "/reports", icon: BarChart },
   ];
 
   const NavContent = () => (

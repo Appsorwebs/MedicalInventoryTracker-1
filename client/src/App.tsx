@@ -9,12 +9,14 @@ import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import Dashboard from "@/pages/dashboard";
 import Drugs from "@/pages/drugs";
+import Reports from "@/pages/reports";
 
 function Router() {
   return (
     <Switch>
       <ProtectedRoute path="/" component={Dashboard} />
       <ProtectedRoute path="/drugs" component={Drugs} />
+      <ProtectedRoute path="/reports" component={Reports} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
