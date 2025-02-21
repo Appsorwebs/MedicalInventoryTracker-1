@@ -1,91 +1,91 @@
 import { User, InsertUser, Drug, InsertDrug } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { drugs, users } from "@shared/schema";
 import session from "express-session";
-import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Drug operations
   getDrugs(): Promise<Drug[]>;
   getDrug(id: number): Promise<Drug | undefined>;
   createDrug(drug: InsertDrug): Promise<Drug>;
   updateDrug(id: number, drug: Partial<Drug>): Promise<Drug | undefined>;
   deleteDrug(id: number): Promise<boolean>;
-  
+
   // Session store
   sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private drugs: Map<number, Drug>;
-  private userId: number;
-  private drugId: number;
+export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map();
-    this.drugs = new Map();
-    this.userId = 1;
-    this.drugId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.userId++;
-    const user: User = { id, isActive: true, ...insertUser };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async getDrugs(): Promise<Drug[]> {
-    return Array.from(this.drugs.values());
+    return await db.select().from(drugs);
   }
 
   async getDrug(id: number): Promise<Drug | undefined> {
-    return this.drugs.get(id);
+    const [drug] = await db.select().from(drugs).where(eq(drugs.id, id));
+    return drug;
   }
 
   async createDrug(insertDrug: InsertDrug): Promise<Drug> {
-    const id = this.drugId++;
-    const drug: Drug = {
-      id,
-      ...insertDrug,
-      status: 'active',
-      createdAt: new Date(),
-    };
-    this.drugs.set(id, drug);
+    const [drug] = await db
+      .insert(drugs)
+      .values({
+        ...insertDrug,
+        status: 'active',
+        createdAt: new Date(),
+      })
+      .returning();
     return drug;
   }
 
   async updateDrug(id: number, updateData: Partial<Drug>): Promise<Drug | undefined> {
-    const existingDrug = this.drugs.get(id);
-    if (!existingDrug) return undefined;
-
-    const updatedDrug = { ...existingDrug, ...updateData };
-    this.drugs.set(id, updatedDrug);
-    return updatedDrug;
+    const [drug] = await db
+      .update(drugs)
+      .set(updateData)
+      .where(eq(drugs.id, id))
+      .returning();
+    return drug;
   }
 
   async deleteDrug(id: number): Promise<boolean> {
-    return this.drugs.delete(id);
+    const [drug] = await db
+      .delete(drugs)
+      .where(eq(drugs.id, id))
+      .returning();
+    return !!drug;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
