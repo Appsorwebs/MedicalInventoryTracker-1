@@ -1,15 +1,28 @@
 import nodemailer from 'nodemailer';
 import { Drug } from '@shared/schema';
 
+if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  throw new Error("SMTP configuration environment variables must be set");
+}
+
 // Create reusable transporter object using SMTP transport
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
+  port: parseInt(process.env.SMTP_PORT),
   secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+});
+
+// Verify transporter configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error('SMTP configuration error:', error);
+  } else {
+    console.log("SMTP server is ready to take our messages");
+  }
 });
 
 interface EmailConfig {
@@ -18,7 +31,7 @@ interface EmailConfig {
 }
 
 const emailConfig: EmailConfig = {
-  fromEmail: process.env.NOTIFICATION_EMAIL || 'notifications@drugmanager.com',
+  fromEmail: process.env.SMTP_USER || 'notifications@drugmanager.com',
   fromName: 'Drug Expiry Manager',
 };
 
@@ -26,6 +39,11 @@ export async function sendExpirationAlert(
   userEmail: string,
   expiringDrugs: Drug[]
 ): Promise<boolean> {
+  if (!userEmail) {
+    console.error('Cannot send email: user email is empty');
+    return false;
+  }
+
   try {
     const emailContent = generateExpirationEmailContent(expiringDrugs);
 

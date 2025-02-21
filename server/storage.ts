@@ -5,6 +5,7 @@ import { drugs, users } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
+import postgres from "pg";
 
 const PostgresSessionStore = connectPg(session);
 
@@ -31,8 +32,13 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
+    // Create a separate connection pool for the session store
+    // to avoid conflicts with the schema migrations
+    const sessionPool = new postgres.Pool({ connectionString: process.env.DATABASE_URL });
+
     this.sessionStore = new PostgresSessionStore({
-      pool,
+      pool: sessionPool,
+      tableName: 'session', // Explicitly name the table
       createTableIfMissing: true,
     });
   }
