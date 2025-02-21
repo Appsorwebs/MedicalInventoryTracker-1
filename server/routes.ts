@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { insertDrugSchema } from "@shared/schema";
+import { sendExpirationAlert } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
@@ -55,6 +56,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!success) return res.sendStatus(404);
     res.sendStatus(204);
   });
+
+  // Email notification settings
+  app.patch("/api/user/notifications", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+
+    const { emailNotifications } = req.body;
+    const user = await storage.updateUser(req.user.id, { emailNotifications });
+    res.json(user);
+  });
+
+  // Set up scheduled task for expiration notifications
+  setInterval(async () => {
+    try {
+      const users = await storage.getUsersWithNotifications();
+      const drugs = await storage.getDrugs();
+      const today = new Date();
+
+      // Get drugs expiring within 30 days
+      const expiringDrugs = drugs.filter(drug => {
+        const expirationDate = new Date(drug.expirationDate);
+        const daysUntilExpiry = Math.ceil(
+          (expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return daysUntilExpiry <= 30 && daysUntilExpiry > 0;
+      });
+
+      if (expiringDrugs.length > 0) {
+        for (const user of users) {
+          await sendExpirationAlert(user.email, expiringDrugs);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to send expiration notifications:', error);
+    }
+  }, 24 * 60 * 60 * 1000); // Run once every 24 hours
 
   const httpServer = createServer(app);
   return httpServer;

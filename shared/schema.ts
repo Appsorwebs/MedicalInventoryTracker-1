@@ -6,8 +6,10 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  email: text("email").notNull(),
   role: text("role").notNull(),
   isActive: boolean("is_active").notNull().default(true),
+  emailNotifications: boolean("email_notifications").notNull().default(true),
 });
 
 export const drugs = pgTable("drugs", {
@@ -32,7 +34,8 @@ export const drugs = pgTable("drugs", {
 
 export const insertUserSchema = createInsertSchema(users, {
   role: z.enum(['admin', 'pharmacist', 'manufacturer']).describe('User role'),
-}).omit({ id: true, isActive: true });
+  email: z.string().email('Invalid email format'),
+}).omit({ id: true, isActive: true, emailNotifications: true });
 
 export const insertDrugSchema = createInsertSchema(drugs).omit({ 
   id: true, 
