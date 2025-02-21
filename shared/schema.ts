@@ -31,7 +31,7 @@ export const drugs = pgTable("drugs", {
 });
 
 export const insertUserSchema = createInsertSchema(users, {
-  role: z.enum(['admin', 'pharmacist', 'manufacturer']),
+  role: z.enum(['admin', 'pharmacist', 'manufacturer']).describe('User role'),
 }).omit({ id: true, isActive: true });
 
 export const insertDrugSchema = createInsertSchema(drugs).omit({ 
