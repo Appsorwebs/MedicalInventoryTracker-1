@@ -70,11 +70,15 @@ function LoginForm() {
   const { loginMutation } = useAuth();
   const form = useForm({
     resolver: zodResolver(insertUserSchema.pick({ username: true, password: true })),
+    defaultValues: {
+      username: "",
+      password: ""
+    }
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => loginMutation.mutate(data))} className="space-y-4">
+      <form onSubmit={form.handleSubmit((data) => loginMutation.mutate(data as any))} className="space-y-4">
         <FormField
           control={form.control}
           name="username"
@@ -82,7 +86,7 @@ function LoginForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Enter your username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -95,7 +99,7 @@ function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,11 +118,17 @@ function RegisterForm() {
   const { registerMutation } = useAuth();
   const form = useForm({
     resolver: zodResolver(insertUserSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      email: "",
+      role: "pharmacist" as const
+    }
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => registerMutation.mutate(data))} className="space-y-4">
+      <form onSubmit={form.handleSubmit((data) => registerMutation.mutate(data as any))} className="space-y-4">
         <FormField
           control={form.control}
           name="username"
@@ -126,7 +136,20 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Enter your username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="example@domain.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,7 +162,7 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -152,7 +175,10 @@ function RegisterForm() {
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <select {...field} className="w-full p-2 border rounded">
+                <select 
+                  {...field} 
+                  className="w-full p-2 border rounded bg-background border-input"
+                >
                   <option value="pharmacist">Pharmacist</option>
                   <option value="manufacturer">Manufacturer</option>
                   <option value="admin">Administrator</option>
