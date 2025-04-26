@@ -31,7 +31,7 @@ export default function NavSidebar() {
     <div className="flex flex-col h-full">
       <div className="flex h-16 items-center gap-2 px-4 border-b lg:px-6">
         <Pill className="h-6 w-6 text-primary" />
-        <span className="font-semibold">Drug Manager</span>
+        <span className="font-semibold">Golden Drugs Manager</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto">
@@ -85,7 +85,7 @@ export default function NavSidebar() {
         <div className="flex h-full items-center justify-between">
           <div className="flex items-center gap-2">
             <Pill className="h-6 w-6 text-primary" />
-            <span className="font-semibold">Drug Manager</span>
+            <span className="font-semibold">Golden Drugs Manager</span>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />

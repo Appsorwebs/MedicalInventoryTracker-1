@@ -33,7 +33,7 @@ export default function AuthPage() {
           <CardHeader className="space-y-1">
             <div className="flex items-center gap-2 mb-2">
               <Pill className="h-7 w-7 text-primary" />
-              <CardTitle className="text-2xl font-bold">Medical Drug Expiry Manager</CardTitle>
+              <CardTitle className="text-2xl font-bold">Golden Drugs Expiry Manager</CardTitle>
             </div>
             <CardDescription>
               Enter your details to access your account
