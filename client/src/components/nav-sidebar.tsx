@@ -13,6 +13,7 @@ import {
   Settings,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function NavSidebar() {
   const [location] = useLocation();
@@ -57,7 +58,11 @@ export default function NavSidebar() {
         </div>
       </nav>
 
-      <div className="p-4 border-t mt-auto">
+      <div className="p-4 border-t mt-auto space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Theme</span>
+          <ThemeToggle />
+        </div>
         <Button
           variant="ghost"
           className="w-full justify-start gap-2 text-destructive hover:text-destructive"
@@ -82,17 +87,20 @@ export default function NavSidebar() {
             <Pill className="h-6 w-6 text-primary" />
             <span className="font-semibold">Drug Manager</span>
           </div>
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-full max-w-xs">
-              <NavContent />
-            </SheetContent>
-          </Sheet>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="lg:hidden">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-full max-w-xs">
+                <NavContent />
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
 

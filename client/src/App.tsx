@@ -4,6 +4,7 @@ import { Switch, Route } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
+import { ThemeProvider } from "@/components/theme-provider";
 
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
@@ -27,12 +28,16 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router />
-        <Toaster />
-      </AuthProvider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="drug-manager-theme">
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <div className="min-h-screen bg-background text-foreground antialiased transition-colors duration-300">
+            <Router />
+            <Toaster />
+          </div>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
