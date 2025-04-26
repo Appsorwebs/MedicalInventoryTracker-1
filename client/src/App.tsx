@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
 
 import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
@@ -31,8 +32,9 @@ function App() {
     <ThemeProvider defaultTheme="system" storageKey="drug-manager-theme">
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <div className="min-h-screen bg-background text-foreground antialiased transition-colors duration-300">
+          <div className="min-h-screen bg-background text-foreground antialiased transition-colors duration-300 flex flex-col">
             <Router />
+            <Footer />
             <Toaster />
           </div>
         </AuthProvider>

@@ -18,16 +18,16 @@ export const drugs = pgTable("drugs", {
   brandName: text("brand_name").notNull(),
   manufacturer: text("manufacturer").notNull(),
   batchNumber: text("batch_number").notNull(),
-  expirationDate: date("expiration_date").notNull(),
+  expirationDate: text("expiration_date").notNull(), // Changed from date to text for month/year format
   dosageForm: text("dosage_form").notNull(),
   strength: text("strength").notNull(),
   quantity: integer("quantity").notNull(),
   storageConditions: text("storage_conditions").notNull(),
   packaging: text("packaging").notNull(),
   composition: text("composition").notNull(),
-  indication: text("indication").notNull(),
-  contraindications: text("contraindications").notNull(),
-  sideEffects: text("side_effects").notNull(),
+  indication: text("indication"),
+  contraindications: text("contraindications"),
+  sideEffects: text("side_effects"),
   status: text("status").notNull().default('active'),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -42,7 +42,10 @@ export const insertDrugSchema = createInsertSchema(drugs).omit({
   createdAt: true, 
   status: true 
 }).extend({
-  expirationDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be in YYYY-MM-DD format')
+  expirationDate: z.string().regex(/^\d{4}-\d{2}$/, 'Must be in YYYY-MM format'),
+  indication: z.string().optional(),
+  contraindications: z.string().optional(),
+  sideEffects: z.string().optional()
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

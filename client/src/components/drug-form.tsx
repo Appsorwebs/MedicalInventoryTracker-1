@@ -14,6 +14,11 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
   const { toast } = useToast();
   const form = useForm<InsertDrug>({
     resolver: zodResolver(insertDrugSchema),
+    defaultValues: {
+      indication: '',
+      contraindications: '',
+      sideEffects: '',
+    }
   });
 
   const mutation = useMutation({
@@ -107,9 +112,14 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
               <FormItem>
                 <FormLabel>Expiration Date</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input 
+                    type="month" 
+                    placeholder="YYYY-MM" 
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
+                <p className="text-xs text-muted-foreground mt-1">Format: YYYY-MM (Year-Month)</p>
               </FormItem>
             )}
           />
@@ -203,7 +213,9 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
           name="indication"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Indication</FormLabel>
+              <FormLabel className="flex items-center gap-2">
+                Indication <span className="text-xs text-muted-foreground">(Optional)</span>
+              </FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
@@ -217,7 +229,9 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
           name="contraindications"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contraindications</FormLabel>
+              <FormLabel className="flex items-center gap-2">
+                Contraindications <span className="text-xs text-muted-foreground">(Optional)</span>
+              </FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
@@ -231,7 +245,9 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
           name="sideEffects"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Side Effects</FormLabel>
+              <FormLabel className="flex items-center gap-2">
+                Side Effects <span className="text-xs text-muted-foreground">(Optional)</span>
+              </FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
