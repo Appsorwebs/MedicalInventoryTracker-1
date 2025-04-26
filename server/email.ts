@@ -1,29 +1,39 @@
 import nodemailer from 'nodemailer';
 import { Drug } from '@shared/schema';
 
-if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-  throw new Error("SMTP configuration environment variables must be set");
+// Check if SMTP configuration is available
+const isSmtpConfigured = !!(
+  process.env.SMTP_HOST && 
+  process.env.SMTP_PORT && 
+  process.env.SMTP_USER && 
+  process.env.SMTP_PASS
+);
+
+// Create a transporter if SMTP is configured, otherwise set to null
+const transporter = isSmtpConfigured 
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    })
+  : null;
+
+// Verify transporter configuration if available
+if (transporter) {
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.error('SMTP configuration error:', error);
+    } else {
+      console.log("SMTP server is ready to take our messages");
+    }
+  });
+} else {
+  console.warn('SMTP not configured. Email notifications will be disabled.');
 }
-
-// Create reusable transporter object using SMTP transport
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
-// Verify transporter configuration
-transporter.verify(function (error, success) {
-  if (error) {
-    console.error('SMTP configuration error:', error);
-  } else {
-    console.log("SMTP server is ready to take our messages");
-  }
-});
 
 interface EmailConfig {
   fromEmail: string;
@@ -41,6 +51,12 @@ export async function sendExpirationAlert(
 ): Promise<boolean> {
   if (!userEmail) {
     console.error('Cannot send email: user email is empty');
+    return false;
+  }
+
+  // If SMTP is not configured, log a message and return false
+  if (!transporter || !isSmtpConfigured) {
+    console.warn('Cannot send email: SMTP not configured');
     return false;
   }
 
