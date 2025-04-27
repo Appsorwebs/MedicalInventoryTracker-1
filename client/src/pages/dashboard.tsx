@@ -60,9 +60,9 @@ export default function Dashboard() {
       <NavSidebar />
       <main className="flex-1 p-4 sm:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
-          {/* Moved the welcome message to a separate card for better layout */}
-          <Card className="mb-6">
-            <CardContent className="pt-6">
+          {/* Welcome message with improved visibility across all devices */}
+          <Card className="mb-6 sticky top-0 z-10">
+            <CardContent className="pt-6 pb-6">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">
                 Welcome, {user?.username}
               </h1>
@@ -103,42 +103,42 @@ export default function Dashboard() {
           
           <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mb-6 sm:mb-8">
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-purple-50 dark:bg-purple-950/30">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-red-100 dark:bg-red-950/40">
                 <CardTitle className="text-sm font-medium">Within 30 Days</CardTitle>
-                <Clock className="h-4 w-4 text-purple-600" />
+                <Clock className="h-4 w-4 text-red-700" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-purple-600">{expiring30Days.length}</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-red-50 dark:bg-red-950/30">
-                <CardTitle className="text-sm font-medium">Within 60 Days</CardTitle>
-                <Clock className="h-4 w-4 text-red-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-red-500">{expiring60Days.length}</div>
+                <div className="text-2xl font-bold text-red-700">{expiring30Days.length}</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 bg-orange-50 dark:bg-orange-950/30">
-                <CardTitle className="text-sm font-medium">Within 90 Days</CardTitle>
-                <Clock className="h-4 w-4 text-orange-500" />
+                <CardTitle className="text-sm font-medium">Within 60 Days</CardTitle>
+                <Clock className="h-4 w-4 text-orange-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-orange-500">{expiring90Days.length}</div>
+                <div className="text-2xl font-bold text-orange-600">{expiring60Days.length}</div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-yellow-50 dark:bg-yellow-950/30">
-                <CardTitle className="text-sm font-medium">Within 120 Days</CardTitle>
-                <Clock className="h-4 w-4 text-yellow-500" />
+              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-amber-50 dark:bg-amber-950/30">
+                <CardTitle className="text-sm font-medium">Within 90 Days</CardTitle>
+                <Clock className="h-4 w-4 text-amber-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-yellow-500">{expiring120Days.length}</div>
+                <div className="text-2xl font-bold text-amber-600">{expiring90Days.length}</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-violet-50 dark:bg-violet-950/30">
+                <CardTitle className="text-sm font-medium">Within 120 Days</CardTitle>
+                <Clock className="h-4 w-4 text-violet-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-violet-600">{expiring120Days.length}</div>
               </CardContent>
             </Card>
           </div>
@@ -157,20 +157,20 @@ export default function Dashboard() {
                   // Determine expiration category and styling
                   let badgeVariant = "outline";
                   let badgeText = "Within 120 days";
-                  let badgeClass = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300";
+                  let badgeClass = "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300";
                   
                   if (daysUntilExpiration <= 30) {
                     badgeVariant = "destructive";
                     badgeText = "Within 30 days";
-                    badgeClass = "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300";
-                  } else if (daysUntilExpiration <= 60) {
-                    badgeVariant = "destructive";
-                    badgeText = "Within 60 days";
                     badgeClass = "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
+                  } else if (daysUntilExpiration <= 60) {
+                    badgeVariant = "outline";
+                    badgeText = "Within 60 days";
+                    badgeClass = "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
                   } else if (daysUntilExpiration <= 90) {
                     badgeVariant = "outline";
                     badgeText = "Within 90 days";
-                    badgeClass = "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300";
+                    badgeClass = "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300";
                   }
                   
                   return (
