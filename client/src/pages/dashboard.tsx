@@ -58,18 +58,16 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-background">
       <NavSidebar />
-      <main className="flex-1 p-4 sm:p-8 overflow-auto">
-        <div className="max-w-6xl mx-auto">
-          {/* Welcome message with improved visibility across all devices */}
-          <Card className="mb-6 sticky top-0 z-10">
-            <CardContent className="pt-6 pb-6">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">
-                Welcome, {user?.username}
-              </h1>
-            </CardContent>
-          </Card>
+      <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-auto">
+        <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
+          {/* Welcome message with improved visibility for mobile devices */}
+          <div className="px-4 py-6 bg-background border rounded-lg shadow-sm">
+            <h1 className="text-2xl md:text-3xl font-bold text-center">
+              Welcome, {user?.username}
+            </h1>
+          </div>
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 sm:mb-8">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Total Drugs</CardTitle>
@@ -101,7 +99,7 @@ export default function Dashboard() {
             </Card>
           </div>
           
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mb-6 sm:mb-8">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 bg-red-100 dark:bg-red-950/40">
                 <CardTitle className="text-sm font-medium">Within 30 Days</CardTitle>

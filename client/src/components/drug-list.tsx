@@ -47,7 +47,7 @@ export default function DrugList({ drugs, isLoading }: DrugListProps) {
   return (
     <>
       {/* Mobile View */}
-      <div className="lg:hidden space-y-4">
+      <div className="lg:hidden space-y-6">
         {drugs.map((drug) => (
           <Card key={drug.id} className="p-4">
             <div className="space-y-2">
