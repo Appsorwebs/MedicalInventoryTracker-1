@@ -123,19 +123,7 @@ export default function DrugForm({ onSuccess }: { onSuccess?: () => void }) {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="dosageForm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Dosage Form</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          
           <FormField
             control={form.control}
             name="strength"

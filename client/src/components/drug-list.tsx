@@ -28,12 +28,16 @@ export default function DrugList({ drugs, isLoading }: DrugListProps) {
   const getExpiryStatus = (date: string) => {
     const expiryDate = new Date(date);
     const now = new Date();
-    const monthsUntilExpiry = (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24 * 30);
+    const daysUntilExpiry = Math.floor((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (monthsUntilExpiry <= 0) {
+    if (daysUntilExpiry <= 0) {
       return <Badge variant="destructive">Expired</Badge>;
-    } else if (monthsUntilExpiry <= 6) {
-      return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Expiring Soon</Badge>;
+    } else if (daysUntilExpiry <= 60) {
+      return <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-300">Within 60 days</Badge>;
+    } else if (daysUntilExpiry <= 90) {
+      return <Badge variant="outline" className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-300">Within 90 days</Badge>;
+    } else if (daysUntilExpiry <= 120) {
+      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-300">Within 120 days</Badge>;
     }
     return <Badge variant="secondary">Valid</Badge>;
   };

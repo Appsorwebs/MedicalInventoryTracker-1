@@ -85,7 +85,7 @@ export default function NavSidebar() {
         <div className="flex h-full items-center justify-between">
           <div className="flex items-center gap-2">
             <Pill className="h-6 w-6 text-primary" />
-            <span className="font-semibold">Golden Drugs Manager</span>
+            <span className="font-semibold">Drugs Manager</span>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
