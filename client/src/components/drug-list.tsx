@@ -32,6 +32,8 @@ export default function DrugList({ drugs, isLoading }: DrugListProps) {
 
     if (daysUntilExpiry <= 0) {
       return <Badge variant="destructive">Expired</Badge>;
+    } else if (daysUntilExpiry <= 30) {
+      return <Badge variant="outline" className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border-purple-300">Within 30 days</Badge>;
     } else if (daysUntilExpiry <= 60) {
       return <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-300">Within 60 days</Badge>;
     } else if (daysUntilExpiry <= 90) {

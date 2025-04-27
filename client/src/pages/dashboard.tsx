@@ -23,10 +23,16 @@ export default function Dashboard() {
   const now = new Date();
 
   // Define expiration categories
+  const expiring30Days = drugs?.filter(drug => {
+    const expirationDate = new Date(drug.expirationDate);
+    const daysUntilExpiration = Math.floor((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return daysUntilExpiration > 0 && daysUntilExpiration <= 30;
+  }) || [];
+
   const expiring60Days = drugs?.filter(drug => {
     const expirationDate = new Date(drug.expirationDate);
     const daysUntilExpiration = Math.floor((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-    return daysUntilExpiration > 0 && daysUntilExpiration <= 60;
+    return daysUntilExpiration > 30 && daysUntilExpiration <= 60;
   }) || [];
 
   const expiring90Days = drugs?.filter(drug => {
@@ -42,7 +48,7 @@ export default function Dashboard() {
   }) || [];
 
   // Combine all expiring drugs for the main list
-  const expiringDrugs = [...expiring60Days, ...expiring90Days, ...expiring120Days].sort((a, b) => {
+  const expiringDrugs = [...expiring30Days, ...expiring60Days, ...expiring90Days, ...expiring120Days].sort((a, b) => {
     return new Date(a.expirationDate).getTime() - new Date(b.expirationDate).getTime();
   });
 
@@ -54,9 +60,14 @@ export default function Dashboard() {
       <NavSidebar />
       <main className="flex-1 p-4 sm:p-8 overflow-auto">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 md:mb-8 text-center sm:text-left">
-            Welcome, {user?.username}
-          </h1>
+          {/* Moved the welcome message to a separate card for better layout */}
+          <Card className="mb-6">
+            <CardContent className="pt-6">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">
+                Welcome, {user?.username}
+              </h1>
+            </CardContent>
+          </Card>
 
           <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 sm:mb-8">
             <Card>
@@ -90,7 +101,17 @@ export default function Dashboard() {
             </Card>
           </div>
           
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3 mb-6 sm:mb-8">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mb-6 sm:mb-8">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 bg-purple-50 dark:bg-purple-950/30">
+                <CardTitle className="text-sm font-medium">Within 30 Days</CardTitle>
+                <Clock className="h-4 w-4 text-purple-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-purple-600">{expiring30Days.length}</div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 bg-red-50 dark:bg-red-950/30">
                 <CardTitle className="text-sm font-medium">Within 60 Days</CardTitle>
@@ -138,7 +159,11 @@ export default function Dashboard() {
                   let badgeText = "Within 120 days";
                   let badgeClass = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300";
                   
-                  if (daysUntilExpiration <= 60) {
+                  if (daysUntilExpiration <= 30) {
+                    badgeVariant = "destructive";
+                    badgeText = "Within 30 days";
+                    badgeClass = "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300";
+                  } else if (daysUntilExpiration <= 60) {
                     badgeVariant = "destructive";
                     badgeText = "Within 60 days";
                     badgeClass = "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
